@@ -19,7 +19,7 @@ def test_is_healthy(busybe_app):
 
 def test_create_new_entry(busybe_app):
     title = 'task 1'
-    response = Driver.post_entry(title)
+    response = Driver.create_entry(title)
     assert_that(response.title, equal_to(title))
 
 
@@ -28,8 +28,8 @@ def test_raise_bad_request_while_creating_entry_without_title(busybe_app):
 
 
 def test_all_entries_received(busybe_app):
-    entry_one = Driver.post_entry('task 1')
-    entry_two = Driver.post_entry('task 2')
+    entry_one = Driver.create_entry('task 1')
+    entry_two = Driver.create_entry('task 2')
     entries = Driver.get_entries()
 
     found_first = False

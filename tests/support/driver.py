@@ -13,8 +13,8 @@ class Driver:
         return response.status_code == ACCEPTED.value
 
     @staticmethod
-    def post_entry(param):
-        response = requests.post("http://localhost:8080/api/entries", json={'title': param})
+    def create_entry(entry_title):
+        response = requests.post("http://localhost:8080/api/entries", json={'title': entry_title})
         assert response.status_code == CREATED.value
         return Entry.from_json(response.json())
 
