@@ -4,7 +4,7 @@ import time
 from os import path
 
 
-class FrontApi:
+class App:
 
     def __init__(self):
         self._app_p = None

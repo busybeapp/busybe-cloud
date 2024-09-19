@@ -1,7 +1,7 @@
 import pytest
 from hamcrest import assert_that, equal_to, is_
 
-from tests.support.busybe_app import FrontApi
+from tests.support.busybe_app import App
 from tests.support.driver import Driver
 
 
@@ -9,28 +9,28 @@ app_driver = Driver()
 
 
 @pytest.fixture(scope='function')
-def busybe_app():
-    app = FrontApi()
+def app():
+    app = App()
     app.start()
     yield app
     app.stop()
 
 
-def test_is_healthy(busybe_app):
+def test_is_healthy(app):
     assert app_driver.is_healthy()
 
 
-def test_create_new_entry(busybe_app):
+def test_create_new_entry(app):
     title = 'task 1'
     response = app_driver.create_entry(title)
     assert_that(response.title, equal_to(title))
 
 
-def test_raise_bad_request_while_creating_entry_without_title(busybe_app):
+def test_raise_bad_request_while_creating_entry_without_title(app):
     app_driver.create_entry('', expected_bad_request=True)
 
 
-def test_all_entries_received(busybe_app):
+def test_all_entries_received(app):
     entry_one = app_driver.create_entry('task 1')
     entry_two = app_driver.create_entry('task 2')
     entries = app_driver.get_entries()
