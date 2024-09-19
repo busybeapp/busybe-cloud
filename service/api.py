@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 
 from service.entries.persistence.driver import EntriesDriver
@@ -5,6 +8,8 @@ from service.entries.validators.validator import validate_resource, ResourceVali
 from service.health.health_response import HealthResponse
 
 app = Flask(__name__)
+
+load_dotenv()
 
 persistence = EntriesDriver()
 
@@ -32,4 +37,4 @@ def entries():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', debug=True, port=8080)
+    app.run(host=os.getenv("ENDPOINT", 'localhost'), port=os.getenv("PORT", 8080))
