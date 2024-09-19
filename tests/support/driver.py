@@ -1,32 +1,37 @@
+import os
 from http.client import ACCEPTED, CREATED, BAD_REQUEST
 
 import requests
+from dotenv import load_dotenv
 
 from service.entries.model.entry import Entry
+
+load_dotenv()
 
 
 class Driver:
 
-    @staticmethod
-    def is_healthy():
-        response = requests.get("http://localhost:8080/api/health", verify=False)
-        return response.status_code == ACCEPTED.value
+    def __init__(self):
+        self.port = os.getenv("PORT", 8080)
+        self.endpoint = os.getenv("ENDPOINT", 'localhost')
+        self.root = f'http://{self.endpoint}:{self.port}/api'
 
-    @staticmethod
-    def create_entry(entry_title):
-        response = requests.post("http://localhost:8080/api/entries", json={'title': entry_title})
-        assert response.status_code == CREATED.value
-        return Entry.from_json(response.json())
+    def is_healthy(self):
+        response = requests.get(f"{self.root}/health", verify=False)
+        return response.status_code == ACCEPTED
 
-    @staticmethod
-    def post_entry_expecting_bad_request(param):
-        response = requests.post("http://localhost:8080/api/entries", json={'title': param})
-        return response.status_code == BAD_REQUEST.value
+    def create_entry(self, entry_title, expected_bad_request=False):
+        response = requests.post(f"{self.root}/entries", json={'title': entry_title})
 
-    @staticmethod
-    def get_entries():
-        response = requests.get("http://localhost:8080/api/entries")
-        assert response.status_code == ACCEPTED.value
+        if expected_bad_request:
+            assert response.status_code == BAD_REQUEST
+        else:
+            assert response.status_code == CREATED
+            return Entry.from_json(response.json())
+
+    def get_entries(self):
+        response = requests.get(f"{self.root}/entries")
+        assert response.status_code == ACCEPTED
         return [Entry.from_json(entry) for entry in response.json()]
 
 

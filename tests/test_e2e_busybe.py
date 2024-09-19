@@ -5,6 +5,9 @@ from tests.support.busybe_app import FrontApi
 from tests.support.driver import Driver
 
 
+app_driver = Driver()
+
+
 @pytest.fixture(scope='function')
 def busybe_app():
     app = FrontApi()
@@ -14,23 +17,23 @@ def busybe_app():
 
 
 def test_is_healthy(busybe_app):
-    assert Driver.is_healthy()
+    assert app_driver.is_healthy()
 
 
 def test_create_new_entry(busybe_app):
     title = 'task 1'
-    response = Driver.create_entry(title)
+    response = app_driver.create_entry(title)
     assert_that(response.title, equal_to(title))
 
 
 def test_raise_bad_request_while_creating_entry_without_title(busybe_app):
-    assert Driver.post_entry_expecting_bad_request('')
+    app_driver.create_entry('', expected_bad_request=True)
 
 
 def test_all_entries_received(busybe_app):
-    entry_one = Driver.create_entry('task 1')
-    entry_two = Driver.create_entry('task 2')
-    entries = Driver.get_entries()
+    entry_one = app_driver.create_entry('task 1')
+    entry_two = app_driver.create_entry('task 2')
+    entries = app_driver.get_entries()
 
     found_first = False
     found_second = False

@@ -1,6 +1,7 @@
 # production
 Flask
 requests
+python-dotenv
 
 # tests
 pytest
