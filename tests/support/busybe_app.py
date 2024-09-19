@@ -14,9 +14,9 @@ class App:
 
     def _start_app(self):
         app_env = os.environ.copy()
-        app_file = os.getcwd().split('tests')[0] + 'service/api.py'
+        app_file = os.getcwd().split('tests')[0] + 'service/app.py'
         if not path.exists(app_file):
-            app_file = 'service/api.py'
+            app_file = 'service/app.py'
 
         self._app_p = subprocess.Popen(
             ['python', app_file], env=app_env)
