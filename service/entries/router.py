@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 import logging
 
 from .model.entry import Entry
-from .persistence.driver import EntriesDriver
+from .persistence.entries_driver import EntriesDriver
 from .validators.validator import ResourceValidationError, validate_fields
 
 logger = logging.getLogger(__name__)

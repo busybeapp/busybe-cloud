@@ -1,7 +1,7 @@
 import threading
-import uuid
 
 from service.entries.model.entry import Entry
+from service.entries.persistence.id_manager import IdManager
 
 
 class EntriesDriver:
@@ -13,7 +13,7 @@ class EntriesDriver:
     def add_entry(self, entry):
         entry = Entry.from_json(entry)
 
-        entry.id = str(uuid.uuid4())
+        entry.id = IdManager.assign()
 
         with self.mu:
             self.entries[entry.id] = entry
