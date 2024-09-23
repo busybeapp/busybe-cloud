@@ -1,11 +1,13 @@
 # production
-Flask
+fastapi
+uvicorn
 requests
 python-dotenv
 
 # tests
 pytest
 PyHamcrest
+httpx
 
 # helpers
 ipython
