@@ -1,5 +1,5 @@
 import os
-from http.client import ACCEPTED, CREATED, BAD_REQUEST
+from http.client import ACCEPTED, CREATED, BAD_REQUEST, OK
 
 import requests
 from dotenv import load_dotenv
@@ -18,7 +18,7 @@ class Driver:
 
     def is_healthy(self):
         response = requests.get(f"{self.root}/health", verify=False)
-        return response.status_code == ACCEPTED
+        return response.status_code == OK
 
     def create_entry(self, entry_title, expected_bad_request=False):
         response = requests.post(f"{self.root}/entries", json={'title': entry_title})
@@ -31,7 +31,7 @@ class Driver:
 
     def get_entries(self):
         response = requests.get(f"{self.root}/entries")
-        assert response.status_code == ACCEPTED
+        assert response.status_code == OK
         return [Entry.from_json(entry) for entry in response.json()]
 
 
