@@ -1,12 +1,8 @@
 from unittest.mock import patch
 
 import pytest
-import threading
-import time
-
 from hamcrest import assert_that, is_
 
-from service.entries.model.entry import Entry
 from service.entries.persistence.entries_driver import EntriesDriver
 
 

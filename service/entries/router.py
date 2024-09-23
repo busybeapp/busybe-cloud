@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import BaseModel
-from typing import List, Dict, Any
 import logging
+from typing import List, Dict, Any
+
+from fastapi import APIRouter, HTTPException, Depends, status
 
 from .model.entry import Entry
 from .persistence.entries_driver import EntriesDriver
-from .validators.validator import ResourceValidationError, validate_fields
+from .validators.validator import validate_fields
 
 logger = logging.getLogger(__name__)
 router = APIRouter()  # Ensure this line is present

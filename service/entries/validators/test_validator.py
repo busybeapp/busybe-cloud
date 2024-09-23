@@ -1,6 +1,7 @@
-from typing import Optional, List, Dict, Any
+from typing import Dict, Any
+
 import pytest
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from fastapi.testclient import TestClient
 from hamcrest import assert_that, is_
 from starlette.responses import JSONResponse
