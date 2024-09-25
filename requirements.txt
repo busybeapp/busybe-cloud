@@ -3,6 +3,7 @@ fastapi
 uvicorn
 requests
 python-dotenv
+python-multipart
 
 # tests
 pytest
