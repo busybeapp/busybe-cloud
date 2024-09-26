@@ -1,17 +1,8 @@
-from threading import Thread
-
 import pytest
 from hamcrest import assert_that, equal_to, is_not, has_items
 
 from tests.support.app import App
 
-
-# @pytest.fixture
-# def ai_service():
-#     ai_service_stub = AiServiceStub()
-#     Thread(target=serve, args=(ai_service_stub,), daemon=True).start()
-#     yield ai_service_stub
-#     stop()
 
 @pytest.fixture(scope='session')
 def app():
