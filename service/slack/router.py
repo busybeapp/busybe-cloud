@@ -4,13 +4,13 @@ from fastapi import APIRouter, Form, HTTPException
 from fastapi.responses import JSONResponse
 
 from service.entries.model.entry import Entry
-from service.entries.persistence.entries_driver import EntriesDriver
+from service.entries.persistence.entries_store import EntriesStore
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-persistence = EntriesDriver()
+persistence = EntriesStore()
 
 
 @router.post("/")

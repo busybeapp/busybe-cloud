@@ -1,21 +1,19 @@
 import logging
 from typing import List, Dict, Any
 
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, status
 
 from .model.entry import Entry
-from .persistence.entries_driver import EntriesDriver
-from .validators.validator import validate_fields
+from .persistence.entries_store import EntriesStore
 
 logger = logging.getLogger(__name__)
-router = APIRouter()  # Ensure this line is present
-persistence = EntriesDriver()
+router = APIRouter()
+persistence = EntriesStore()
 
 
 @router.post("/", response_model=Dict[str, Any], status_code=status.HTTP_201_CREATED)
 async def create_entry(
-        entry: Entry,
-        validate: None = Depends(validate_fields(['title']))
+        entry: Entry
 ):
     logger.info(f"Received entry data: {entry.dict()}")
     persisted_entry = persistence.add_entry(entry.dict())
