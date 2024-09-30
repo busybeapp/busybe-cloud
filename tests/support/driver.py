@@ -10,7 +10,7 @@ class Driver:
     def __init__(self):
         self.port = os.getenv("PORT", 8080)
         self.endpoint = os.getenv("ENDPOINT", 'localhost')
-        self.root = f'http://{self.endpoint}:{self.port}/api'
+        self.root = f'http://{self.endpoint}:{self.port}'
         self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN", "your-slack-verification-token")
 
     def is_healthy(self):
@@ -18,12 +18,12 @@ class Driver:
         return response.status_code == 200
 
     def create_entry(self, entry_title):
-        response = requests.post(f"{self.root}/entries", json={'title': entry_title})
+        response = requests.post(f"{self.root}/api/entries", json={'title': entry_title})
         assert response.status_code == 201, f"Unexpected status code: {response.status_code}"
         return Entry.from_json(response.json())
 
     def get_entries(self):
-        response = requests.get(f"{self.root}/entries")
+        response = requests.get(f"{self.root}/api/entries")
         assert response.status_code == 200
         return [Entry.from_json(entry) for entry in response.json()]
 
