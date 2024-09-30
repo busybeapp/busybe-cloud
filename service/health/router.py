@@ -7,4 +7,4 @@ router = APIRouter()
 
 @router.get("/", response_model=Health, status_code=status.HTTP_200_OK)
 def health():
-    return Health().to_client()
+    return Health()
