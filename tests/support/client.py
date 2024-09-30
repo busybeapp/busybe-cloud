@@ -5,7 +5,7 @@ import requests
 from service.entries.model.entry import Entry
 
 
-class Driver:
+class Client:
 
     def __init__(self):
         self.port = os.getenv("PORT", 8080)
