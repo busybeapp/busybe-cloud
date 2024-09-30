@@ -4,11 +4,8 @@ from pydantic import BaseModel, constr
 
 
 class Entry(BaseModel):
-    id: Optional[str]
+    id: Optional[str] = None
     title: constr(min_length=1)
-
-    def __init__(self, id: Optional[str] = None, title: str = ''):
-        super().__init__(id=id, title=title)
 
     @staticmethod
     def from_json(json_data):

@@ -18,5 +18,5 @@ def test_raise_value_error_given_invalid_json():
 
 
 def test_convert_entry_to_json():
-    entry_json = Entry('12345', 'kuku_task').to_json()
+    entry_json = Entry(id='12345', title='kuku_task').to_json()
     assert_that(entry_json, is_({'id': '12345', 'title': 'kuku_task'}))

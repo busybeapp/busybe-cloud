@@ -16,8 +16,8 @@ async def create_entry(
         entry: Entry
 ):
     logger.info(f"Received entry data: {entry.dict()}")
-    persisted_entry = persistence.add_entry(entry.dict())
-    return persisted_entry.to_json()
+    entry = persistence.add_entry(entry.dict())
+    return entry.to_json()
 
 
 @router.get("/", response_model=List[Dict[str, Any]], status_code=status.HTTP_200_OK)
