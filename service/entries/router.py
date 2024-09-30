@@ -22,11 +22,4 @@ async def create_entry(
 
 @router.get("/", response_model=List[Dict[str, Any]], status_code=status.HTTP_200_OK)
 def get_entries():
-    logger.info("Fetching all entries")
-    try:
-        entries = persistence.get_entries()
-        logger.info(f"Retrieved entries: {entries}")
-        return entries
-    except Exception as e:
-        logger.error(f"Error retrieving entries: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    return persistence.get_entries()
