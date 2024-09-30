@@ -1,5 +1,6 @@
 import os
 import subprocess
+from time import sleep
 
 from busypie import wait as busy_wait, SECOND
 
@@ -18,9 +19,14 @@ class App:
 
     def _start_app(self):
         self._app_p = subprocess.Popen(
-            ['python', 'service/app.py'], env=(os.environ.copy()))
+            ['python', 'service/app.py'], env=(os.environ.copy())
+        )
 
-        busy_wait().at_most(2, SECOND).until(lambda: self.is_healthy())
+        (busy_wait().
+         ignore_exceptions().
+         at_most(30 * SECOND).
+         poll_interval(2 * SECOND).
+         until(lambda: self.is_healthy()))
 
     def stop(self):
         print('Terminating app')

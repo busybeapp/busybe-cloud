@@ -7,9 +7,11 @@ from tests.support.app import App
 @pytest.fixture(scope='session')
 def app():
     app = App()
-    app.start()
-    yield app
-    app.stop()
+    try:
+        app.start()
+        yield app
+    finally:
+        app.stop()
 
 
 def test_is_healthy(app):

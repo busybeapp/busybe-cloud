@@ -15,7 +15,7 @@ class Driver:
 
     def is_healthy(self):
         response = requests.get(f"{self.root}/health", verify=False)
-        return response.status_code == 200  # Assuming 200 is OK
+        return response.status_code == 200
 
     def create_entry(self, entry_title):
         response = requests.post(f"{self.root}/entries", json={'title': entry_title})
