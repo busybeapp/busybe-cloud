@@ -19,7 +19,7 @@ class Driver:
 
     def create_entry(self, entry_title):
         response = requests.post(f"{self.root}/api/entries", json={'title': entry_title})
-        assert response.status_code == 201, f"Unexpected status code: {response.status_code}"
+        assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 
     def get_entries(self):

@@ -1,5 +1,6 @@
 import pytest
 from hamcrest import assert_that, equal_to, is_not, has_items
+from starlette import status
 
 from tests.support.app import App
 
@@ -26,7 +27,7 @@ def test_create_new_entry(app):
 
 
 def test_raise_bad_request_while_creating_entry_without_title(app):
-    with pytest.raises(AssertionError, match="status code: 400"):
+    with pytest.raises(AssertionError, match=str(status.HTTP_400_BAD_REQUEST)):
         app.create_entry('')
 
 
