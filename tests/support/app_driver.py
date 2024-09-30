@@ -1,13 +1,12 @@
 import os
 import subprocess
-from time import sleep
 
 from busypie import wait as busy_wait, SECOND
 
 from tests.support.driver import Driver
 
 
-class App:
+class AppDriver:
 
     def __init__(self):
         self._app_p = None

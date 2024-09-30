@@ -2,12 +2,12 @@ import pytest
 from hamcrest import assert_that, equal_to, is_not, has_items
 from starlette import status
 
-from tests.support.app import App
+from tests.support.app_driver import AppDriver
 
 
 @pytest.fixture(scope='session')
 def app():
-    app = App()
+    app = AppDriver()
     try:
         app.start()
         yield app
