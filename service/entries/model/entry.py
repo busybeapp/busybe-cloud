@@ -1,23 +1,15 @@
+from typing import Optional
+
+from pydantic import BaseModel, constr
 
 
-class Entry(object):
-
-    def __init__(self, id, title):
-        self.id = id
-        self.title = title
+class Entry(BaseModel):
+    id: Optional[str] = None
+    title: constr(min_length=1)
 
     @staticmethod
     def from_json(json_data):
-        _id = json_data.get('id')
-        _title = json_data.get('title')
-
-        if not _title:
-            raise ValueError("Invalid entry: 'title' are required")
-
-        return Entry(_id, _title)
+        return Entry(**json_data)
 
     def to_json(self):
-        return {
-            'id': self.id,
-            'title': self.title
-        }
+        return self.model_dump()

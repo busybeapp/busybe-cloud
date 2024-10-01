@@ -4,7 +4,7 @@ import uuid
 from service.entries.model.entry import Entry
 
 
-class EntriesDriver:
+class EntriesStore:
 
     def __init__(self):
         self.entries = {}
@@ -13,7 +13,7 @@ class EntriesDriver:
     def add_entry(self, entry):
         entry = Entry.from_json(entry)
 
-        entry.id = str(uuid.uuid4())
+        entry.id = self.create_id()
 
         with self.mu:
             self.entries[entry.id] = entry
@@ -22,3 +22,7 @@ class EntriesDriver:
     def get_entries(self):
         with self.mu:
             return [entry.to_json() for entry in self.entries.values()]
+
+    @staticmethod
+    def create_id():
+        return str(uuid.uuid4())

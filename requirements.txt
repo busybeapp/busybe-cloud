@@ -1,7 +1,15 @@
 # production
-Flask
+fastapi
+uvicorn
 requests
+python-dotenv
+python-multipart
+pydantic
 
 # tests
 pytest
 PyHamcrest
+busypie
+
+# helpers
+ipython
