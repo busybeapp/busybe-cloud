@@ -21,11 +21,7 @@ class AppDriver:
             ['python', 'service/app.py'], env=(os.environ.copy())
         )
 
-        (busy_wait().
-         ignore_exceptions().
-         at_most(30 * SECOND).
-         poll_interval(2 * SECOND).
-         until(lambda: self.is_healthy()))
+        busy_wait().ignore_exceptions().until(self.is_healthy)
 
     def stop(self):
         self._app_p.terminate()
