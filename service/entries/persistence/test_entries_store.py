@@ -17,7 +17,8 @@ def test_entry_id_is_uuid(entries_store):
 
 
 def _assert_is_uuid(_id):
-    pattern = r'^[{]?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})[}]?$'
+    pattern = (r'^[{]?([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]'
+               r'{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})[}]?$')
     assert_that(bool(re.match(pattern, _id)), is_(True))
 
 

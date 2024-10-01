@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from busypie import wait as busy_wait, SECOND
+from busypie import wait as busy_wait
 
 from tests.support.client import Client
 
@@ -44,4 +44,3 @@ class AppDriver:
 
     def send_invalid_token(self, command, text):
         return self.app_client.send_invalid_token(command, text)
-

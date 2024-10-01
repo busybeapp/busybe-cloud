@@ -13,3 +13,5 @@ busypie
 
 # helpers
 ipython
+flake8
+pre-commit

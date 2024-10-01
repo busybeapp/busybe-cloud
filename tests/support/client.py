@@ -11,14 +11,15 @@ class Client:
         self.port = os.getenv("PORT", 8080)
         self.endpoint = os.getenv("ENDPOINT", 'localhost')
         self.root = f'http://{self.endpoint}:{self.port}'
-        self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN", "your-slack-verification-token")
+        self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
 
     def is_healthy(self):
         response = requests.get(f"{self.root}/health", verify=False)
         return response.status_code == 200
 
     def create_entry(self, entry_title):
-        response = requests.post(f"{self.root}/api/entries", json={'title': entry_title})
+        response = requests.post(f"{self.root}/api/entries",
+                                 json={'title': entry_title})
         assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 

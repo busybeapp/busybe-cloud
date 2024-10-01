@@ -14,7 +14,9 @@ persistence = EntriesStore()
 
 
 @router.post("/")
-async def slack_handler(command: str = Form(...), text: str = Form(...), token: str = Form(...)):
+async def slack_handler(
+        command: str = Form(...), text: str = Form(...), token: str = Form(...)
+        ):
     slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
     if not slack_token:
         logger.error("Error: Slack verification token not set")
@@ -30,11 +32,14 @@ async def slack_handler(command: str = Form(...), text: str = Form(...), token: 
         task_title = text.strip()
         if not task_title:
             logger.error("Error: No task title provided")
-            return JSONResponse(content={"text": "Please provide a task title."}, status_code=200)
+            return JSONResponse(
+                content={"text": "Please provide a task title."},
+                status_code=200)
 
         created_entry = persistence.add_entry(Entry(title=task_title).dict())
 
-        logger.info(f"Task created with ID: {created_entry.id}, Title: {created_entry.title}")
+        logger.info(f"Task created with ID: {created_entry.id},"
+                    f" Title: {created_entry.title}")
 
         return JSONResponse(content={
             "text": f"Task created: {created_entry.title}",

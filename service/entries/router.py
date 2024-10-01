@@ -1,7 +1,7 @@
 import logging
 from typing import List, Dict, Any
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from .model.entry import Entry
 from .persistence.entries_store import EntriesStore
