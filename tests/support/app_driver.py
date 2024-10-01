@@ -28,10 +28,8 @@ class AppDriver:
          until(lambda: self.is_healthy()))
 
     def stop(self):
-        print('Terminating app')
         self._app_p.terminate()
         self._app_p.wait()
-        print('App terminated')
 
     def is_healthy(self):
         return self.app_client.is_healthy()

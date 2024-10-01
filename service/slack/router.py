@@ -16,7 +16,6 @@ persistence = EntriesStore()
 @router.post("/")
 async def slack_handler(command: str = Form(...), text: str = Form(...), token: str = Form(...)):
     slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
-    print('slack_token =>>>>', slack_token)
     if not slack_token:
         logger.error("Error: Slack verification token not set")
         raise HTTPException(status_code=500, detail="Slack verification token not set")
