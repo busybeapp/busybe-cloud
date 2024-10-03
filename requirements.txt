@@ -8,6 +8,7 @@ pydantic
 
 # tests
 pytest
+pytest-cov
 PyHamcrest
 busypie
 
@@ -15,3 +16,4 @@ busypie
 ipython
 flake8
 pre-commit
+jq
