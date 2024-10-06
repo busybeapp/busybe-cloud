@@ -28,12 +28,11 @@ repos:
         name: pytest with coverage
         entry: pytest
         language: system
-        types: [ python ]
+        types: [python]
         pass_filenames: false
         always_run: true
-        args: [
-          "--cov=./",
-          "--cov-report=term-missing",
-          "--cov-report=json",
-          "--cov-fail-under=50"
-        ]
+        args:
+          - --cov=./
+          - --cov-report=term-missing
+          - --cov-report=json
+          - --cov-fail-under=50
