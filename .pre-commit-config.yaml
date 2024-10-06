@@ -23,3 +23,10 @@ repos:
         language: system
         types: [python]
         args: ["--exclude", "venv", "--max-line-length=88"]
+
+      - id: pytest
+        name: pytest with coverage
+        entry: pytest
+        language: system
+        types: [ python ]
+        pass_filenames: false
