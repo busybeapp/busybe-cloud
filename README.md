@@ -1,5 +1,8 @@
 # BusyBe Cloud
 
+[![Quality](https://github.com/busybeapp/busybe-cloud/actions/workflows/quality.yml/badge.svg)](https://github.com/busybeapp/busybe-cloud/actions/workflows/quality.yml)
+[![Test](https://github.com/busybeapp/busybe-cloud/actions/workflows/test.yml/badge.svg)](https://github.com/busybeapp/busybe-cloud/actions/workflows/test.yml)
+
 Backend API for busybe app
 
 ## Local development
