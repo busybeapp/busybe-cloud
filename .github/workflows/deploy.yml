@@ -5,6 +5,7 @@ on:
     workflows:
       - "Quality"
       - "Test"
+    strategy: wait-all
     types:
       - completed
     branches:
@@ -17,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python environment
         uses: actions/setup-python@v5
