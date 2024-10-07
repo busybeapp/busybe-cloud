@@ -31,21 +31,24 @@ class Client:
     def create_task_via_slack(self, title):
         return self._send_slack_command("/busybe", title)
 
-    def _send_slack_command(self, command, text, token=None):
+    def _send_slack_command(self, command, text, token=None, invalid_token=False):
+
         if token is None:
             token = self.slack_token
 
-        response = requests.post(f"{self.root}/slack/events", data={
+        response = requests.post(f"{self.root}/api/slack/events", data={
             "command": command,
             "text": text,
             "token": token
         })
 
-        response_json = response.json()
-        return response, response_json
+        assert response.status_code == (401 if invalid_token else 200)
 
-    def list_tasks_via_slack(self):
-        return self._send_slack_command("/listentries", "")
+        return response.json()
 
-    def send_invalid_token(self, command, text):
-        return self._send_slack_command(command, text, token="invalid_token")
+    def send_invalid_token(self):
+        return self._send_slack_command("/busybe", "invalid token",
+                                        token="invalid_token", invalid_token=True)
+
+    def send_unrecognized_command(self):
+        return self._send_slack_command('/unknowncommand', 'unrecognized_command')

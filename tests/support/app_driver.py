@@ -17,8 +17,12 @@ class AppDriver:
         self._start_app()
 
     def _start_app(self):
+        app_file = os.getcwd().split('tests')[0] + 'service/app.py'
+        if not os.path.exists(app_file):
+            app_file = 'service/app.py'
+
         self._app_p = subprocess.Popen(
-            ['python', 'service/app.py'], env=(os.environ.copy())
+            ['python', app_file], env=(os.environ.copy())
         )
 
         busy_wait().ignore_exceptions().until(self.is_healthy)
@@ -39,8 +43,8 @@ class AppDriver:
     def create_task_via_slack(self, title):
         return self.app_client.create_task_via_slack(title)
 
-    def list_tasks_via_slack(self):
-        return self.app_client.list_tasks_via_slack()
+    def send_invalid_token(self):
+        return self.app_client.send_invalid_token()
 
-    def send_invalid_token(self, command, text):
-        return self.app_client.send_invalid_token(command, text)
+    def send_unrecognized_command(self):
+        return self.app_client.send_unrecognized_command()
