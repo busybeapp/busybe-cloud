@@ -1,14 +1,11 @@
 name: Dockerize And Deploy
 
 on:
-  workflow_run:
-    workflows:
-      - "Quality"
-      - "Test"
-    types:
-      - completed
+  push:
     branches:
       - main
+    tags:
+      - 'v*'
 
 jobs:
   build:
