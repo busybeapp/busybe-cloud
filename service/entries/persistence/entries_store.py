@@ -5,14 +5,24 @@ from service.entries.model.entry import Entry
 
 
 class EntriesStore:
+    _instance = None
+    _lock = threading.Lock()
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            with cls._lock:
+                if not cls._instance:
+                    cls._instance = super(EntriesStore, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self):
-        self.entries = {}
-        self.mu = threading.Lock()
+        if not hasattr(self, 'initialized'):
+            self.entries = {}
+            self.mu = threading.Lock()
+            self.initialized = True
 
     def add_entry(self, entry):
         entry = Entry.from_json(entry)
-
         entry.id = self.create_id()
 
         with self.mu:

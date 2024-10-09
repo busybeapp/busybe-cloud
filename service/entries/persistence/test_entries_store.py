@@ -29,6 +29,7 @@ def test_entry_ids_are_different(entries_store):
 
 
 def test_get_entries(entries_store):
+    entries_store.entries = {}
     entries_store.add_entry({"title": "Entry one"})
     entries_store.add_entry({"title": "Entry two"})
     assert_that(len(entries_store.get_entries()), is_(2))
