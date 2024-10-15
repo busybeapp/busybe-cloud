@@ -10,6 +10,7 @@ from starlette import status
 from service.entries import router as entries_router
 from service.health import router as health_router
 from service.slack import router as slack_router
+from service.bizz import router as bizz_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,7 +29,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 app.include_router(health_router.router, prefix="/health")
 app.include_router(entries_router.router, prefix="/api/entries")
-app.include_router(slack_router.router, prefix="/api/slack/events")
+# app.include_router(slack_router.router, prefix="/api/slack/events")
+app.include_router(slack_router.router)
+app.include_router(bizz_router.router, prefix="/api")
 
 
 def main():
