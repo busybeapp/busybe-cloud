@@ -1,8 +1,6 @@
 import os
 import subprocess
-
 from busypie import wait as busy_wait
-
 from tests.support.client import Client
 
 
@@ -40,11 +38,5 @@ class AppDriver:
     def get_entries(self):
         return self.app_client.get_entries()
 
-    def create_task_via_slack(self, title):
-        return self.app_client.create_task_via_slack(title)
-
-    def send_invalid_token(self):
-        return self.app_client.send_invalid_token()
-
-    def send_unrecognized_command(self):
-        return self.app_client.send_unrecognized_command()
+    def send_slack_shortcut_message(self, data):
+        return self.app_client.send_slack_message_shortcut(data)

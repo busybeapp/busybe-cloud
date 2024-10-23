@@ -1,3 +1,4 @@
+import json
 import os
 
 import requests
@@ -28,27 +29,17 @@ class Client:
         assert response.status_code == 200
         return [Entry.from_json(entry) for entry in response.json()]
 
-    def create_task_via_slack(self, title):
-        return self._send_slack_command("/busybe", title)
+    def send_slack_message_shortcut(self, data, invalid_token=False):
+        data['token'] = invalid_token if invalid_token else self.slack_token
 
-    def _send_slack_command(self, command, text, token=None, invalid_token=False):
+        payload = {
+            "payload": json.dumps(data)
+        }
 
-        if token is None:
-            token = self.slack_token
-
-        response = requests.post(f"{self.root}/api/slack/events", data={
-            "command": command,
-            "text": text,
-            "token": token
-        })
+        response = requests.post(
+            f"{self.root}/api/slack/message-shortcut",
+            data=payload)
 
         assert response.status_code == (401 if invalid_token else 200)
 
         return response.json()
-
-    def send_invalid_token(self):
-        return self._send_slack_command("/busybe", "invalid token",
-                                        token="invalid_token", invalid_token=True)
-
-    def send_unrecognized_command(self):
-        return self._send_slack_command('/unknowncommand', 'unrecognized_command')

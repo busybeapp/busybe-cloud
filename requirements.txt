@@ -1,19 +1,25 @@
 # production
-fastapi
-uvicorn
-requests
-python-dotenv
-python-multipart
-pydantic
+fastapi~=0.103.1
+uvicorn~=0.23.2
+requests~=2.31.0
+python-dotenv~=1.0.0
+python-multipart~=0.0.5
+pydantic~=2.4.2
+httpx~=0.24.1
+starlette~=0.27.0
+
 
 # tests
-pytest
-pytest-cov
-PyHamcrest
-busypie
+pytest~=7.4.2
+pytest-cov~=4.1.0
+PyHamcrest~=2.0.4
+busypie~=0.5.1
+pytest-asyncio~=0.21.0
+random-word~=1.0.7
 
 # helpers
-ipython
-flake8
-pre-commit
+ipython~=8.16.1
+flake8~=6.1.0
+pre-commit~=3.4.0
+mccabe~=0.7.0
 jq

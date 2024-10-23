@@ -1,14 +1,14 @@
-import os
+import json
 import logging
-from fastapi import APIRouter, Form, HTTPException
-from fastapi.responses import JSONResponse
+import os
+
+import httpx
+from fastapi import APIRouter, Request, BackgroundTasks, HTTPException
 
 from service.entries.model.entry import Entry
 from service.entries.persistence.entries_store import EntriesStore
-from service.slack.slack_content_messages import (SLACK_TEXT_PROVIDE_TASK_TITLE,
-                                                  SLACK_TEXT_COMMAND_NOT_RECOGNIZED,
-                                                  SLACK_TEXT_TOKEN_NOT_SET,
-                                                  SLACK_TEXT_INVALID_TOKEN)
+from service.slack.slack_content_messages import (SLACK_TEXT_INVALID_TOKEN,
+                                                  SLACK_TEXT_TOKEN_NOT_SET)
 
 logger = logging.getLogger(__name__)
 
@@ -17,36 +17,27 @@ router = APIRouter()
 persistence = EntriesStore()
 
 
+def send_followup_message(response_url: str, entry: Entry):
+    message = {"text": f"{entry.title} was added to your busybe inbox"}
+    with httpx.Client() as client:
+        response = client.post(response_url, json=message)
+        logger.info(f"Follow-up response status: {response.status_code}")
+
+
 @router.post("/")
-async def slack_handler(
-        command: str = Form(...), text: str = Form(...),
-        token: str = Form(...)):
-    await _validate_slack_token(token)
+async def handle_message_shortcut(request: Request, background_tasks: BackgroundTasks):
+    form_data = await request.form()
+    payload = json.loads(form_data.get("payload", "{}"))
+    await _validate_slack_token(payload.get('token'))
 
-    logger.info(f"Received command: {command}, text: {text}")
+    response_url = payload.get("response_url")
+    text = payload.get('message', {}).get('text', {})
+    created_entry = persistence.add_entry(Entry(title=text).model_dump())
+    if response_url:
+        background_tasks.add_task(send_followup_message, response_url, created_entry)
 
-    if command == "/busybe":
-        task_title = text.strip()
-        if not task_title:
-            logger.error("Error: No task title provided")
-            return JSONResponse(
-                content={"text": SLACK_TEXT_PROVIDE_TASK_TITLE},
-                status_code=200)
-
-        created_entry = persistence.add_entry(Entry(title=task_title).dict())
-
-        logger.info(f"Task created with ID: {created_entry.id},"
-                    f" Title: {created_entry.title}")
-
-        return JSONResponse(content={
-            "text": f"Task created: {created_entry.title}",
-            "id": created_entry.id
-        }, status_code=200)
-
-    logger.error("Error: Command not recognized")
-    return JSONResponse(
-        content={"text": SLACK_TEXT_COMMAND_NOT_RECOGNIZED},
-        status_code=200)
+    logger.info(f"Received payload: {payload}")
+    return {"isBase64Encoded": True, "statusCode": 200, "body": "{}"}
 
 
 async def _validate_slack_token(token):

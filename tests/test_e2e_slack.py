@@ -1,10 +1,20 @@
 import pytest
-from hamcrest import assert_that, equal_to, is_not
+from busypie import wait
+from hamcrest import assert_that, equal_to, has_item, has_property
+from random_word import RandomWords
 
-from service.slack.slack_content_messages import (SLACK_TEXT_INVALID_TOKEN,
-                                                  SLACK_TEXT_COMMAND_NOT_RECOGNIZED,
-                                                  SLACK_TEXT_PROVIDE_TASK_TITLE)
 from tests.support.app_driver import AppDriver
+from tests.support.slack_driver import SlackDriver
+
+
+@pytest.fixture(scope='session')
+def slack():
+    app = SlackDriver()
+    try:
+        app.start()
+        yield app
+    finally:
+        app.stop()
 
 
 @pytest.fixture(scope='session')
@@ -17,22 +27,25 @@ def app():
         app.stop()
 
 
-def test_create_new_entry_via_slack(app):
-    entry = app.create_task_via_slack('New task')
-    assert_that(entry['text'], equal_to('Task created: New task'))
-    assert_that(entry['id'], is_not(None))
+@pytest.mark.asyncio
+async def test_create_new_entry_via_slack(app, slack):
+    title = RandomWords().get_random_word()
+    app.send_slack_shortcut_message(build_request(title))
+    entries = app.get_entries()
+    assert_that(entries, has_item(has_property("title", equal_to(title))))
 
 
-def test_fail_create_entry_with_no_title(app):
-    entry = app.create_task_via_slack('')
-    assert_that(entry['text'], equal_to(SLACK_TEXT_PROVIDE_TASK_TITLE))
+def build_request(title):
+    return {
+        "user": {"name": "busybe_tester"},
+        "message": {"text": title},
+        "response_url": "http://localhost:9090/webhook"
+    }
 
 
-def test_fail_invalid_slack_token(app):
-    entry = app.send_invalid_token()
-    assert_that(entry['detail'], equal_to(SLACK_TEXT_INVALID_TOKEN))
-
-
-def test_unrecognized_command(app):
-    entry = app.send_unrecognized_command()
-    assert_that(entry['text'], equal_to(SLACK_TEXT_COMMAND_NOT_RECOGNIZED))
+@pytest.mark.asyncio
+async def test_callback_msg_to_slack(app, slack):
+    title = RandomWords().get_random_word()
+    app.send_slack_shortcut_message(build_request(title))
+    msg = wait().until(lambda: slack.get_callback_msg())
+    assert_that(msg, equal_to(f"{title} was added to your busybe inbox"))
