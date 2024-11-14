@@ -1,11 +1,11 @@
 import logging
 import os
-
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette import status
+from starlette.middleware.cors import CORSMiddleware
 
 from service.entries import router as entries_router
 from service.health import router as health_router
@@ -16,6 +16,14 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.exception_handler(RequestValidationError)
