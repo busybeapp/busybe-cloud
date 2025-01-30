@@ -1,12 +1,12 @@
 import logging
 import os
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette import status
 from starlette.middleware.cors import CORSMiddleware
-from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.responses import RedirectResponse
 
 from service.entries import router as entries_router
@@ -18,9 +18,6 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 app = FastAPI()
-
-if os.getenv("ENV") != "testing":
-    app.add_middleware(HTTPSRedirectMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
