@@ -18,9 +18,12 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 app = FastAPI(ignore_trailing_slash=True)
 
+allow_credentials = True,
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://clear-slate-8b4de92f5776.herokuapp.com",
+                   "https://cloud.busybeapp.com", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
