@@ -21,7 +21,8 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["cloud.busybeapp.com, *"],
+    allow_origins=["https://clear-slate-8b4de92f5776.herokuapp.com",
+                   "https://cloud.busybeapp.com", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,18 +44,10 @@ app.include_router(slack_router.router, prefix="/api/slack/message-shortcut")
 
 @app.middleware("http")
 async def enforce_https(request: Request, call_next):
-    if request.headers.get("X-Forwarded-Proto") == "http":
-        return RedirectResponse(request.url.replace(scheme="https"), status_code=301)
+    if request.headers.get("X-Forwarded-Proto", "").lower() == "http":
+        https_url = str(request.url).replace("http://", "https://")
+        return RedirectResponse(url=https_url, status_code=301)
     return await call_next(request)
-
-
-@app.middleware("http")
-async def add_cors_headers(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    return response
 
 
 def main():
