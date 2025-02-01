@@ -7,7 +7,6 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette import status
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import RedirectResponse
 
 from service.entries import router as entries_router
 from service.health import router as health_router
@@ -21,8 +20,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://clear-slate-8b4de92f5776.herokuapp.com",
-                   "https://cloud.busybeapp.com", "*"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -40,14 +38,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 app.include_router(health_router.router, prefix="/health")
 app.include_router(entries_router.router, prefix="/api/entries")
 app.include_router(slack_router.router, prefix="/api/slack/message-shortcut")
-
-
-@app.middleware("http")
-async def enforce_https(request: Request, call_next):
-    if request.headers.get("X-Forwarded-Proto", "").lower() == "http":
-        https_url = str(request.url).replace("http://", "https://")
-        return RedirectResponse(url=https_url, status_code=301)
-    return await call_next(request)
 
 
 def main():
