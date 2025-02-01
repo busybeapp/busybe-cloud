@@ -43,9 +43,28 @@ app.include_router(slack_router.router, prefix="/api/slack/message-shortcut")
 
 @app.middleware("http")
 async def enforce_https(request: Request, call_next):
+    if request.method == "OPTIONS":
+        response = JSONResponse(content=None, status_code=204)
+        response.headers.update({
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization"
+        })
+        return response
+
     if request.headers.get("X-Forwarded-Proto") == "http":
         return RedirectResponse(request.url.replace(scheme="https"), status_code=301)
+
     return await call_next(request)
+
+
+@app.middleware("http")
+async def add_cors_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
 
 
 def main():
