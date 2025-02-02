@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-app = FastAPI(ignore_trailing_slash=True)
+app = FastAPI(redirect_slashes=False)
 
 allow_credentials = True,
 

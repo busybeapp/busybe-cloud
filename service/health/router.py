@@ -9,6 +9,6 @@ class Health(BaseModel):
     message: str = 'Service is up and running'
 
 
-@router.get("/", response_model=Health, status_code=status.HTTP_200_OK)
+@router.get("", response_model=Health, status_code=status.HTTP_200_OK)
 def health():
     return Health()

@@ -24,7 +24,7 @@ def send_followup_message(response_url: str, entry: Entry):
         logger.info(f"Follow-up response status: {response.status_code}")
 
 
-@router.post("/")
+@router.post("")
 async def handle_message_shortcut(request: Request, background_tasks: BackgroundTasks):
     form_data = await request.form()
     payload = json.loads(form_data.get("payload", "{}"))

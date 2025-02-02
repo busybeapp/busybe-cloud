@@ -11,7 +11,7 @@ router = APIRouter()
 persistence = EntriesStore()
 
 
-@router.post("/", response_model=Dict[str, Any], status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Dict[str, Any], status_code=status.HTTP_201_CREATED)
 async def create_entry(
         entry: Entry
 ):
@@ -20,6 +20,6 @@ async def create_entry(
     return entry.to_json()
 
 
-@router.get("/", response_model=List[Dict[str, Any]], status_code=status.HTTP_200_OK)
+@router.get("", response_model=List[Dict[str, Any]], status_code=status.HTTP_200_OK)
 def get_entries():
     return persistence.get_entries()
