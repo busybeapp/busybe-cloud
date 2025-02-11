@@ -29,8 +29,8 @@ class AppDriver:
         self._app_p.terminate()
         self._app_p.wait()
 
-    def is_healthy(self):
-        return self.app_client.is_healthy()
+    def is_healthy(self, headers=None):
+        return self.app_client.is_healthy(headers)
 
     def create_entry(self, title):
         return self.app_client.create_entry(title)

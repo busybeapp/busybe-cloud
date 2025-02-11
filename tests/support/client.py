@@ -2,6 +2,7 @@ import json
 import os
 
 import requests
+from hamcrest import assert_that, is_
 
 from service.entries.model.entry import Entry
 
@@ -14,9 +15,14 @@ class Client:
         self.root = f'http://{self.endpoint}:{self.port}'
         self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
 
-    def is_healthy(self):
-        response = requests.get(f"{self.root}/health", verify=False)
-        return response.status_code == 200
+    def is_healthy(self, headers=None):
+        response = requests.get(f"{self.root}/health", verify=False, headers=headers)
+        if response.status_code == 403:
+            assert_that(response.status_code, is_(403),
+                        "CORS policy does not allow this origin")
+        else:
+            assert_that(response.status_code, is_(200))
+        return response
 
     def create_entry(self, entry_title):
         response = requests.post(f"{self.root}/api/entries",

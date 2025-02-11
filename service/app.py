@@ -10,6 +10,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from service.entries import router as entries_router
 from service.health import router as health_router
+from service.middleware.cors_enforcer import CORSEnforcerMiddleware, ALLOWED_ORIGINS
 from service.slack import router as slack_router
 
 logging.basicConfig(level=logging.INFO)
@@ -18,16 +19,15 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 app = FastAPI(redirect_slashes=False)
 
-allow_credentials = True,
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://clear-slate-8b4de92f5776.herokuapp.com",
-                   "https://cloud.busybeapp.com", "*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
+
+app.add_middleware(CORSEnforcerMiddleware)
 
 
 @app.exception_handler(RequestValidationError)
