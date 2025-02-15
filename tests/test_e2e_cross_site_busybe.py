@@ -2,6 +2,7 @@ import pytest
 from hamcrest import assert_that, equal_to
 from starlette import status
 
+from service.middleware.cors_enforcer import ALLOWED_ORIGINS
 from tests.support.app_driver import AppDriver
 
 
@@ -15,10 +16,7 @@ def app():
         app.stop()
 
 
-@pytest.mark.parametrize("origin", [
-    "https://clear-slate-8b4de92f5776.herokuapp.com",
-    "https://cloud.busybeapp.com",
-])
+@pytest.mark.parametrize("origin", ALLOWED_ORIGINS)
 def test_allowed_origins(app, origin):
     response = app.is_healthy(headers={"Origin": origin})
     assert_that(response.headers.get("access-control-allow-credentials"),
