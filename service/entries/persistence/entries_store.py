@@ -36,3 +36,7 @@ class EntriesStore:
     @staticmethod
     def create_id():
         return str(uuid.uuid4())
+
+    def clear(self):
+        with self.mu:
+            self.entries.clear()
