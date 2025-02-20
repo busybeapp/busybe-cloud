@@ -1,31 +1,19 @@
-from collections import deque
-
 import pytest
 from busypie import wait
 from hamcrest import assert_that, equal_to, has_item, has_property
-from mimicker.mimicker import mimicker, post
 from random_word import RandomWords
 
 from tests.support.app_driver import AppDriver
+from tests.support.slack_driver import SlackDriver
 
-received_payloads = deque()
 
-
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def slack():
-    def webhook_handler(**kwargs):
-        entry = kwargs.get("payload").get('text')
-        received_payloads.appendleft(entry)
-        return 200, {"ok": True}
-
-    slack = mimicker(port=9090).routes(
-        post("/webhook").
-        response_func(webhook_handler)
-    )
-
-    yield slack
-
-    slack.shutdown()
+    slack = SlackDriver()
+    try:
+        yield slack
+    finally:
+        slack.stop()
 
 
 @pytest.fixture(scope='session')
@@ -58,10 +46,5 @@ def build_request(title):
 async def test_callback_msg_to_slack(app, slack):
     title = RandomWords().get_random_word()
     app.send_slack_shortcut_message(build_request(title))
-    msg = wait().until(lambda: get_callback_msg())
+    msg = wait().until(lambda: slack.get_callback_msg())
     assert_that(msg, equal_to(f"{title} was added to your busybe inbox"))
-
-
-def get_callback_msg():
-    return received_payloads[0] if (
-        received_payloads) else received_payloads
