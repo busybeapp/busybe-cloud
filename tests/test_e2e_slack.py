@@ -9,12 +9,11 @@ from tests.support.slack_driver import SlackDriver
 
 @pytest.fixture(scope='session')
 def slack():
-    app = SlackDriver()
+    slack = SlackDriver()
     try:
-        app.start()
-        yield app
+        yield slack
     finally:
-        app.stop()
+        slack.stop()
 
 
 @pytest.fixture(scope='session')

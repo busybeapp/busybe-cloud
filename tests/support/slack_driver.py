@@ -1,47 +1,25 @@
-import logging
-import threading
 from collections import deque
 
-import uvicorn
-from fastapi import FastAPI
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+from mimicker.mimicker import mimicker, post
 
 
 class SlackDriver:
+    received_payloads = deque()
 
     def __init__(self):
-        self._server_thread = None
-        self._app = None
-        self._received_payloads = deque()
-
-    def start(self):
-        self._start_app()
-
-    def _start_app(self):
-        app = FastAPI()
-        self._app = app
-        self._received_payloads = deque()
-
-        @app.post("/webhook")
-        async def webhook(payload: dict):
-            self._received_payloads.appendleft(payload.get('text'))
-            logger.info(f"Got a slack msg: {payload}")
-            return {"ok": True}
-
-        self._server_thread = threading.Thread(
-            target=uvicorn.run,
-            args=(app,),
-            kwargs={"host": "localhost", "port": 9090},
-            daemon=True
+        self.slack = mimicker(port=9090).routes(
+            post("/webhook").
+            response_func(self.webhook_handler)
         )
-        self._server_thread.start()
+
+    def webhook_handler(self, **kwargs):
+        entry = kwargs.get("payload").get('text')
+        self.received_payloads.appendleft(entry)
+        return 200, {"ok": True}
 
     def stop(self):
-        if self._server_thread is not None:
-            self._server_thread.join(timeout=1)
+        self.slack.shutdown()
 
     def get_callback_msg(self):
-        return self._received_payloads[0] if (
-            self._received_payloads) else self._received_payloads
+        return self.received_payloads[0] if (
+            self.received_payloads) else self.received_payloads
