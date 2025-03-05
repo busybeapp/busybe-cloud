@@ -3,7 +3,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import JSONResponse
 
 ALLOWED_ORIGINS = {
-    "https://clear-slate-8b4de92f5776.herokuapp.com",
     "https://cloud.busybeapp.com",
     "https://app.busybeapp.com"
 }
