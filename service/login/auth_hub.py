@@ -14,8 +14,6 @@ ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = (
     int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
 
-TOKEN_STORE = {}
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 
 
