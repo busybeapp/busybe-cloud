@@ -3,17 +3,6 @@ from busypie import wait
 from hamcrest import assert_that, equal_to, has_item, has_property
 from random_word import RandomWords
 
-from tests.support.slack_driver import SlackDriver
-
-
-@pytest.fixture(scope='session')
-def slack():
-    slack = SlackDriver()
-    try:
-        yield slack
-    finally:
-        slack.stop()
-
 
 @pytest.mark.asyncio
 async def test_create_new_entry_via_slack(app, slack):
