@@ -8,7 +8,10 @@ from pydantic import BaseModel
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-ALLOWED_SECRETS = {"TofuMan", "anothersecret456"}
+
+ALLOWED_SECRETS = {"Creeper", "EndyBoy", "ZomBoi",
+                   "Blazey", "Witherz", "PiglinX",
+                   "Ghastly", "EvokerX", "WardenX", "Slimey"}
 TOKEN_STORE = {}
 
 
