@@ -1,18 +1,5 @@
-import pytest
 from hamcrest import assert_that, equal_to, is_not
 from starlette import status
-
-from tests.support.app_driver import AppDriver
-
-
-@pytest.fixture(scope='session')
-def app():
-    app = AppDriver()
-    try:
-        app.start()
-        yield app
-    finally:
-        app.stop()
 
 
 def test_login_success(app):

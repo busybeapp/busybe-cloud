@@ -3,7 +3,6 @@ from busypie import wait
 from hamcrest import assert_that, equal_to, has_item, has_property
 from random_word import RandomWords
 
-from tests.support.app_driver import AppDriver
 from tests.support.slack_driver import SlackDriver
 
 
@@ -14,16 +13,6 @@ def slack():
         yield slack
     finally:
         slack.stop()
-
-
-@pytest.fixture(scope='session')
-def app():
-    app = AppDriver()
-    try:
-        app.start()
-        yield app
-    finally:
-        app.stop()
 
 
 @pytest.mark.asyncio
