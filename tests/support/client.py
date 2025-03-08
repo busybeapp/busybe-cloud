@@ -51,5 +51,4 @@ class Client:
         return response.json()
 
     def login(self, secret):
-        response = requests.post(f"{self.root}/api/login", json={"secret": secret})
-        return response
+        return requests.post(f"{self.root}/api/login", json={"secret": secret})
