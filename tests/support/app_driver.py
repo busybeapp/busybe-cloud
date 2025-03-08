@@ -40,3 +40,6 @@ class AppDriver:
 
     def send_slack_shortcut_message(self, data):
         return self.app_client.send_slack_message_shortcut(data)
+
+    def login(self, secret):
+        return self.app_client.login(secret)

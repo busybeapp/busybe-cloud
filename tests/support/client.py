@@ -49,3 +49,7 @@ class Client:
         assert response.status_code == (401 if invalid_token else 200)
 
         return response.json()
+
+    def login(self, secret):
+        response = requests.post(f"{self.root}/api/login", json={"secret": secret})
+        return response
