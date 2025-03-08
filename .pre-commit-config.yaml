@@ -22,4 +22,4 @@ repos:
         entry: flake8
         language: system
         types: [python]
-        args: ["--exclude", "venv", "--max-line-length=88"]
+        args: ["--exclude", "venv", "--max-line-length=120"]

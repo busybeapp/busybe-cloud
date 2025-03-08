@@ -9,6 +9,7 @@ from starlette import status
 from starlette.middleware.cors import CORSMiddleware
 
 from service.entries import router as entries_router
+from service.login import router as login_router
 from service.health import router as health_router
 from service.middleware.cors_enforcer import CORSEnforcerMiddleware, ALLOWED_ORIGINS
 from service.slack import router as slack_router
@@ -40,6 +41,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 app.include_router(health_router.router, prefix="/health")
 app.include_router(entries_router.router, prefix="/api/entries")
+app.include_router(login_router.router, prefix="/api/login")
 app.include_router(slack_router.router, prefix="/api/slack/message-shortcut")
 
 

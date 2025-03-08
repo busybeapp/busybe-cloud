@@ -3,17 +3,6 @@ from hamcrest import assert_that, equal_to
 from starlette import status
 
 from service.middleware.cors_enforcer import ALLOWED_ORIGINS
-from tests.support.app_driver import AppDriver
-
-
-@pytest.fixture(scope='session')
-def app():
-    app = AppDriver()
-    try:
-        app.start()
-        yield app
-    finally:
-        app.stop()
 
 
 @pytest.mark.parametrize("origin", ALLOWED_ORIGINS)
