@@ -19,12 +19,15 @@ TOKEN_STORE = {}
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 
 
-def create_token(secret: str):
-    expire = (datetime.now(timezone.utc) + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-
-    payload = {"sub": secret, "exp": expire}
+def create_token(secret: str, expiration_min=ACCESS_TOKEN_EXPIRE_MINUTES):
+    payload = {"sub": secret, "exp": (_calculate_expiration(expiration_min))}
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def _calculate_expiration(expiration_min):
+    expire = (datetime.now(timezone.utc) + timedelta(
+        minutes=expiration_min))
+    return expire
 
 
 def verify_token(token: str = Depends(oauth2_scheme)):
