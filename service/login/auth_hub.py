@@ -23,9 +23,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 TOKEN_STORE = set()
 
 
-def generate_token(secret: str, expiration_min=ACCESS_TOKEN_EXPIRE_MINUTES):
+def generate_token(secret: str, expiration_in_min=ACCESS_TOKEN_EXPIRE_MINUTES):
     validate_secret(secret)
-    token = _create_token(expiration_min, secret)
+    token = _create_token(expiration_in_min, secret)
     TOKEN_STORE.add(token)
     return token
 
