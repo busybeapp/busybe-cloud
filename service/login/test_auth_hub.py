@@ -3,7 +3,8 @@ from fastapi import HTTPException
 from hamcrest.core import assert_that
 from starlette import status
 
-from service.login.auth_hub import generate_token, verify_token
+from service.login.auth_hub import generate_token, verify_token, TOKEN_EXPIRED, \
+    INVALID_TOKEN
 
 
 def test_verify_token_success():
@@ -14,7 +15,7 @@ def test_verify_token_success():
 def test_verify_token_expired():
     expired_token = generate_token("WardenX", 0)
     err = assert_unauthorized_token(expired_token)
-    assert_that(err.value.detail, "Token expired")
+    assert_that(err.value.detail, TOKEN_EXPIRED)
 
 
 def assert_unauthorized_token(expired_token):
@@ -27,4 +28,4 @@ def assert_unauthorized_token(expired_token):
 def test_fail_on_invalid_token():
     invalid_token = "invalid.token.here"
     err = assert_unauthorized_token(invalid_token)
-    assert_that(err.value.detail, "Invalid token")
+    assert_that(err.value.detail, INVALID_TOKEN)

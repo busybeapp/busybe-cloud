@@ -7,6 +7,10 @@ from dotenv import load_dotenv
 from fastapi import status, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 
+INVALID_TOKEN = "Invalid token"
+
+TOKEN_EXPIRED = "Token expired"
+
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -55,14 +59,14 @@ def verify_token(token: str = Depends(oauth2_scheme)):
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="Token expired")
+                            detail=TOKEN_EXPIRED)
 
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="Invalid token")
+                            detail=INVALID_TOKEN)
 
 
 def is_token_exists(token):
     if token not in TOKEN_STORE:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail="Invalid token")
+                            detail=INVALID_TOKEN)
