@@ -54,7 +54,7 @@ def _calculate_expiration(expiration_min):
 
 def verify_token(token: str = Depends(oauth2_scheme)):
     try:
-        is_token_exists(token)
+        validate_token_exists(token)
         return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
     except jwt.ExpiredSignatureError:
@@ -66,7 +66,7 @@ def verify_token(token: str = Depends(oauth2_scheme)):
                             detail=INVALID_TOKEN)
 
 
-def is_token_exists(token):
+def validate_token_exists(token):
     if token not in TOKEN_STORE:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=INVALID_TOKEN)
