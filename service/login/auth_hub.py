@@ -25,12 +25,12 @@ TOKEN_STORE = set()
 
 def generate_token(secret: str, expiration_min=ACCESS_TOKEN_EXPIRE_MINUTES):
     validate_secret(secret)
-    token = create_token(expiration_min, secret)
+    token = _create_token(expiration_min, secret)
     TOKEN_STORE.add(token)
     return token
 
 
-def create_token(expiration_min, secret):
+def _create_token(expiration_min, secret):
     payload = {"sub": "BuzzMe", "exp": (_calculate_expiration(expiration_min))}
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
