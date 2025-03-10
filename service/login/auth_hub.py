@@ -35,7 +35,7 @@ def generate_token(secret: str, expiration_in_min=ACCESS_TOKEN_EXPIRE_MINUTES):
 
 
 def _create_token(expiration_min, secret):
-    payload = {"sub": "BuzzMe", "exp": (_calculate_expiration(expiration_min))}
+    payload = {"sub": "BuzzMe", "exp": (_get_expiration_time_for(expiration_min))}
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
@@ -46,7 +46,7 @@ def validate_secret(secret):
                             detail="Unauthorized")
 
 
-def _calculate_expiration(expiration_min):
+def _get_expiration_time_for(expiration_min):
     expire = (datetime.now(timezone.utc) + timedelta(
         minutes=expiration_min))
     return expire
