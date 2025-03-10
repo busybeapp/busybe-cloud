@@ -24,7 +24,7 @@ def assert_unauthorized_token(expired_token):
     return err
 
 
-def test_verify_token_invalid():
+def test_fail_on_invalid_token():
     invalid_token = "invalid.token.here"
     err = assert_unauthorized_token(invalid_token)
     assert_that(err.value.detail, "Invalid token")
