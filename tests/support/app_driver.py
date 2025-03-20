@@ -41,8 +41,5 @@ class AppDriver:
     def send_slack_shortcut_message(self, data):
         return self.app_client.send_slack_message_shortcut(data)
 
-    def valid_user_login(self):
-        return self.app_client.login("Creeper")
-
-    def unauthorized_user_login(self):
-        return self.app_client.login("BadLord")
+    def login(self, secret, invalid_secret=False):
+        return self.app_client.login(secret, invalid_secret)

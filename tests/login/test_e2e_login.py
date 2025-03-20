@@ -1,13 +1,13 @@
-from hamcrest import assert_that, equal_to, is_not
-from starlette import status
+from hamcrest import assert_that, is_not
+
+INVALID_SECRET = "UnauthorizedSecret"
+VALID_SECRET = "Creeper"
 
 
 def test_login_success(app):
-    response = app.valid_user_login()
-    assert_that(response.status_code, equal_to(status.HTTP_200_OK))
-    assert_that(response.json()["access_token"], is_not(None))
+    response_body = app.login(VALID_SECRET)
+    assert_that(response_body["access_token"], is_not(None))
 
 
 def test_login_failure(app):
-    response = app.unauthorized_user_login()
-    assert_that(response.status_code, equal_to(status.HTTP_401_UNAUTHORIZED))
+    app.login(INVALID_SECRET, invalid_secret=True)

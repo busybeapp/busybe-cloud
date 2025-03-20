@@ -50,5 +50,7 @@ class Client:
 
         return response.json()
 
-    def login(self, secret):
-        return requests.post(f"{self.root}/api/login", json={"secret": secret})
+    def login(self, secret, invalid_secret=False):
+        response = requests.post(f"{self.root}/api/login", json={"secret": secret})
+        assert response.status_code == (401 if invalid_secret else 200)
+        return response.json()
