@@ -1,9 +1,7 @@
-import os
 from datetime import datetime, timezone
 from datetime import timedelta
 
 import jwt
-from dotenv import load_dotenv
 from fastapi import status, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 
@@ -11,12 +9,9 @@ INVALID_TOKEN = "Invalid token"
 
 TOKEN_EXPIRED = "Token expired"
 
-load_dotenv()
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = (
-    int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
+SECRET_KEY = "BuzeBSecret!@"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 43200
 
 ALLOWED_SECRETS = {"Creeper", "EndyBoy", "ZomBoi",
                    "Blazey", "Witherz", "PiglinX",
