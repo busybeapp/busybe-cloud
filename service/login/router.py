@@ -4,7 +4,7 @@ from typing import Dict, Any
 from fastapi import APIRouter, status, HTTPException
 from pydantic import BaseModel
 
-from service.login.token import Token
+from service.login import token
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -24,13 +24,13 @@ class LoginRequest(BaseModel):
 
 @router.post("", response_model=Dict[str, Any], status_code=status.HTTP_200_OK)
 def login(request: LoginRequest):
-    is_secret_allowed(request.secret)
-    token_data = Token().generate()
+    validate_secret(request.secret)
+    token_data = token.generate()
     TOKEN_STORE.add(token_data.access_token)
     return token_data.to_response()
 
 
-def is_secret_allowed(key):
-    if key not in ALLOWED_SECRETS:
+def validate_secret(secret):
+    if secret not in ALLOWED_SECRETS:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail=UNAUTHORIZED)

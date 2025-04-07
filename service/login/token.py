@@ -37,19 +37,19 @@ class Token:
             "expires_at": datetime.fromtimestamp(self.expires_at).isoformat()
         }
 
-    @staticmethod
-    def generate(expiration_in_min=ACCESS_TOKEN_EXPIRE_MINUTES):
-        expires_at = _calculate_expiration_time(expiration_in_min)
-        access_token = jwt.encode({"exp": expires_at}, SECRET_KEY, algorithm=ALGORITHM)
-        return Token(access_token=access_token, expires_at=expires_at)
 
-    @staticmethod
-    def verify(token):
-        try:
-            return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+def generate(expiration_in_min=ACCESS_TOKEN_EXPIRE_MINUTES):
+    expires_at = _calculate_expiration_time(expiration_in_min)
+    access_token = jwt.encode({"exp": expires_at}, SECRET_KEY, algorithm=ALGORITHM)
+    return Token(access_token=access_token, expires_at=expires_at)
 
-        except jwt.ExpiredSignatureError:
-            raise TokenExpiredError()
 
-        except jwt.InvalidTokenError:
-            raise InvalidTokenError()
+def verify(token):
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+    except jwt.ExpiredSignatureError:
+        raise TokenExpiredError()
+
+    except jwt.InvalidTokenError:
+        raise InvalidTokenError()
