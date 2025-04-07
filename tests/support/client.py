@@ -6,6 +6,15 @@ from hamcrest import assert_that, is_
 
 from service.entries.model.entry import Entry
 
+AUTH_ERROR = "Login failed"
+
+
+class LoginException(Exception):
+    def __init__(self, status_code, message=AUTH_ERROR):
+        self.status_code = status_code
+        self.message = message
+        super().__init__(self.message)
+
 
 class Client:
 
@@ -47,5 +56,12 @@ class Client:
             data=payload)
 
         assert response.status_code == (401 if invalid_token else 200)
+
+        return response.json()
+
+    def login(self, secret):
+        response = requests.post(f"{self.root}/api/login", json={"secret": secret})
+        if response.status_code != 200:
+            raise LoginException(response.status_code)
 
         return response.json()
