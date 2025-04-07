@@ -1,13 +1,21 @@
 import logging
 from typing import Dict, Any
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, HTTPException
 from pydantic import BaseModel
 
-from service.login.auth_gateway import generate_token
+from service.login.token import Token
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+ALLOWED_SECRETS = {"Creeper", "EndyBoy", "ZomBoi",
+                   "Blazey", "Witherz", "PiglinX",
+                   "Ghastly", "EvokerX", "WardenX", "Slimey"}
+
+TOKEN_STORE = set()
+
+UNAUTHORIZED = "Unauthorized"
 
 
 class LoginRequest(BaseModel):
@@ -16,4 +24,13 @@ class LoginRequest(BaseModel):
 
 @router.post("", response_model=Dict[str, Any], status_code=status.HTTP_200_OK)
 def login(request: LoginRequest):
-    return generate_token(request.secret).to_response()
+    is_secret_allowed(request.secret)
+    token_data = Token().generate()
+    TOKEN_STORE.add(token_data.access_token)
+    return token_data.to_response()
+
+
+def is_secret_allowed(key):
+    if key not in ALLOWED_SECRETS:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=UNAUTHORIZED)
