@@ -1,13 +1,13 @@
 import pytest
 from hamcrest import not_none
 from hamcrest.core import assert_that
-from service.login.token_handler import TokenHandler, TokenExpiredError, \
+from service.login.token import Token, TokenExpiredError, \
     InvalidTokenError, TOKEN_EXPIRED, INVALID_TOKEN
 
 
 @pytest.fixture(scope='function')
 def token_handler():
-    handler = TokenHandler()
+    handler = Token()
     yield handler
 
 
@@ -25,7 +25,7 @@ def test_verify_token_expired(token_handler):
 def assert_token_expired(token_handler, token):
     with pytest.raises(TokenExpiredError) as err:
         token_handler.verify(token)
-    assert_that(err.value.msg, TOKEN_EXPIRED)
+    assert_that(str(err.value), TOKEN_EXPIRED)
 
 
 def test_fail_on_invalid_token(token_handler):
@@ -36,4 +36,4 @@ def test_fail_on_invalid_token(token_handler):
 def assert_invalid_token(token_handler, token):
     with pytest.raises(InvalidTokenError) as err:
         token_handler.verify(token)
-    assert_that(err.value.msg, INVALID_TOKEN)
+    assert_that(str(err.value), INVALID_TOKEN)

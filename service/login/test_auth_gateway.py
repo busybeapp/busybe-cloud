@@ -6,7 +6,7 @@ from hamcrest import assert_that, is_, has_item
 
 from service.login.auth_gateway import generate_token, TOKEN_STORE, UNAUTHORIZED, \
     validate_token
-from service.login.token_handler import TokenHandler
+from service.login.token import Token
 
 VALID_SECRET = "Creeper"
 UNKNOWN_SECRET = "UnknownSecret"
@@ -18,7 +18,7 @@ def mock_token_data(*args, **kwargs):
     return type("TokenData", (), {"access_token": VALID_TOKEN})
 
 
-@patch.object(TokenHandler, "generate", mock_token_data)
+@patch.object(Token, "generate", mock_token_data)
 def test_generate_token_with_valid_secret():
     token_data = generate_token(VALID_SECRET)
     assert_that(token_data.access_token, is_(VALID_TOKEN))
