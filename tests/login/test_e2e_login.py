@@ -1,5 +1,9 @@
-from hamcrest import assert_that, is_not
+import pytest
+from hamcrest import assert_that, is_not, is_
 
+from tests.support.client import LoginException
+
+UNAUTHORIZED_ERROR = 401
 INVALID_SECRET = "UnauthorizedSecret"
 VALID_SECRET = "Creeper"
 
@@ -10,4 +14,6 @@ def test_login_success(app):
 
 
 def test_login_failure(app):
-    app.login(INVALID_SECRET, invalid_secret=True)
+    with pytest.raises(LoginException) as err:
+        app.login(INVALID_SECRET)
+    assert_that(err.value.status_code, is_(UNAUTHORIZED_ERROR))
