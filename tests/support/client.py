@@ -23,6 +23,7 @@ class Client:
         self.endpoint = os.getenv("ENDPOINT", 'localhost')
         self.root = f'http://{self.endpoint}:{self.port}'
         self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
+        self.token = None
 
     def is_healthy(self, headers=None):
         response = requests.get(f"{self.root}/health", verify=False, headers=headers)
@@ -34,13 +35,19 @@ class Client:
         return response
 
     def create_entry(self, entry_title):
+        headers = {
+            'Authorization': f'Bearer {self.token}'
+        }
         response = requests.post(f"{self.root}/api/entries",
-                                 json={'title': entry_title})
+                                 json={'title': entry_title}, headers=headers)
         assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 
     def get_entries(self):
-        response = requests.get(f"{self.root}/api/entries")
+        headers = {
+            'Authorization': f'Bearer {self.token}'
+        }
+        response = requests.get(f"{self.root}/api/entries", headers=headers)
         assert response.status_code == 200
         return [Entry.from_json(entry) for entry in response.json()]
 
