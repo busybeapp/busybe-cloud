@@ -1,13 +1,14 @@
 import logging
 from typing import List, Dict, Any
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 
 from .model.entry import Entry
 from .persistence.entries_store import EntriesStore
+from service.login import token
 
 logger = logging.getLogger(__name__)
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(token.verify)])
 persistence = EntriesStore()
 
 
@@ -15,8 +16,8 @@ persistence = EntriesStore()
 async def create_entry(
         entry: Entry
 ):
-    logger.info(f"Received entry data: {entry.dict()}")
-    entry = persistence.add_entry(entry.dict())
+    logger.info(f"Received entry data: {entry.model_dump()}")
+    entry = persistence.add_entry(entry.model_dump())
     return entry.to_json()
 
 
