@@ -18,12 +18,11 @@ class LoginException(Exception):
 
 class Client:
 
-    def __init__(self):
+    def __init__(self, token=None):
         self.port = os.getenv("PORT", 8080)
         self.endpoint = os.getenv("ENDPOINT", 'localhost')
         self.root = f'http://{self.endpoint}:{self.port}'
         self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
-        self.token = None
 
     def is_healthy(self, headers=None):
         response = requests.get(f"{self.root}/health", verify=False, headers=headers)
@@ -34,18 +33,18 @@ class Client:
             assert_that(response.status_code, is_(200))
         return response
 
-    def create_entry(self, entry_title):
+    def create_entry(self, entry_title, token=None):
         headers = {
-            'Authorization': f'Bearer {self.token}'
+            'Authorization': f'Bearer {token}'
         }
         response = requests.post(f"{self.root}/api/entries",
                                  json={'title': entry_title}, headers=headers)
         assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 
-    def get_entries(self):
+    def get_entries(self, token=None):
         headers = {
-            'Authorization': f'Bearer {self.token}'
+            'Authorization': f'Bearer {token}'
         }
         response = requests.get(f"{self.root}/api/entries", headers=headers)
         assert response.status_code == 200
