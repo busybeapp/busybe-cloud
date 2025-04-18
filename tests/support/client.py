@@ -25,7 +25,9 @@ class Client:
         self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
 
     def is_healthy(self, headers=None):
-        response = requests.get(f"{self.root}/health", verify=False, headers=headers)
+        response = requests.get(f"{self.root}/health",
+                                verify=False,
+                                headers=headers)
         if response.status_code == 403:
             assert_that(response.status_code, is_(403),
                         "CORS policy does not allow this origin")
@@ -34,21 +36,24 @@ class Client:
         return response
 
     def create_entry(self, entry_title, token=None):
-        headers = {
-            'Authorization': f'Bearer {token}'
-        }
         response = requests.post(f"{self.root}/api/entries",
-                                 json={'title': entry_title}, headers=headers)
+                                 json={'title': entry_title},
+                                 headers=(self._append_token(token)))
         assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 
     def get_entries(self, token=None):
+        response = requests.get(f"{self.root}/api/entries",
+                                headers=(self._append_token(token)))
+        assert response.status_code == 200
+        return [Entry.from_json(entry) for entry in response.json()]
+
+    @staticmethod
+    def _append_token(token):
         headers = {
             'Authorization': f'Bearer {token}'
         }
-        response = requests.get(f"{self.root}/api/entries", headers=headers)
-        assert response.status_code == 200
-        return [Entry.from_json(entry) for entry in response.json()]
+        return headers
 
     def send_slack_message_shortcut(self, data, invalid_token=False):
         data['token'] = invalid_token if invalid_token else self.slack_token
@@ -66,7 +71,8 @@ class Client:
         return response.json()
 
     def login(self, secret):
-        response = requests.post(f"{self.root}/api/login", json={"secret": secret})
+        response = requests.post(f"{self.root}/api/login",
+                                 json={"secret": secret})
         if response.status_code != 200:
             raise LoginException(response.status_code)
 
