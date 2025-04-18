@@ -38,22 +38,21 @@ class Client:
     def create_entry(self, entry_title, token=None):
         response = requests.post(f"{self.root}/api/entries",
                                  json={'title': entry_title},
-                                 headers=(self._append_token(token)))
+                                 headers=(self._build_auth_header(token)))
         assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 
     def get_entries(self, token=None):
         response = requests.get(f"{self.root}/api/entries",
-                                headers=(self._append_token(token)))
+                                headers=(self._build_auth_header(token)))
         assert response.status_code == 200
         return [Entry.from_json(entry) for entry in response.json()]
 
     @staticmethod
-    def _append_token(token):
-        headers = {
+    def _build_auth_header(token):
+        return {
             'Authorization': f'Bearer {token}'
         }
-        return headers
 
     def send_slack_message_shortcut(self, data, invalid_token=False):
         data['token'] = invalid_token if invalid_token else self.slack_token
