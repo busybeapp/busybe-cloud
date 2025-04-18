@@ -18,14 +18,16 @@ class LoginException(Exception):
 
 class Client:
 
-    def __init__(self):
+    def __init__(self, token=None):
         self.port = os.getenv("PORT", 8080)
         self.endpoint = os.getenv("ENDPOINT", 'localhost')
         self.root = f'http://{self.endpoint}:{self.port}'
         self.slack_token = os.getenv("SLACK_VERIFICATION_TOKEN")
 
     def is_healthy(self, headers=None):
-        response = requests.get(f"{self.root}/health", verify=False, headers=headers)
+        response = requests.get(f"{self.root}/health",
+                                verify=False,
+                                headers=headers)
         if response.status_code == 403:
             assert_that(response.status_code, is_(403),
                         "CORS policy does not allow this origin")
@@ -33,16 +35,24 @@ class Client:
             assert_that(response.status_code, is_(200))
         return response
 
-    def create_entry(self, entry_title):
+    def create_entry(self, entry_title, token=None):
         response = requests.post(f"{self.root}/api/entries",
-                                 json={'title': entry_title})
+                                 json={'title': entry_title},
+                                 headers=(self._build_auth_header(token)))
         assert response.status_code == 201, response.status_code
         return Entry.from_json(response.json())
 
-    def get_entries(self):
-        response = requests.get(f"{self.root}/api/entries")
+    def get_entries(self, token=None):
+        response = requests.get(f"{self.root}/api/entries",
+                                headers=(self._build_auth_header(token)))
         assert response.status_code == 200
         return [Entry.from_json(entry) for entry in response.json()]
+
+    @staticmethod
+    def _build_auth_header(token):
+        return {
+            'Authorization': f'Bearer {token}'
+        }
 
     def send_slack_message_shortcut(self, data, invalid_token=False):
         data['token'] = invalid_token if invalid_token else self.slack_token
@@ -60,7 +70,8 @@ class Client:
         return response.json()
 
     def login(self, secret):
-        response = requests.post(f"{self.root}/api/login", json={"secret": secret})
+        response = requests.post(f"{self.root}/api/login",
+                                 json={"secret": secret})
         if response.status_code != 200:
             raise LoginException(response.status_code)
 

@@ -9,6 +9,7 @@ class AppDriver:
     def __init__(self):
         self._app_p = None
         self.app_client = None
+        self.token = None
 
     def start(self):
         self.app_client = Client()
@@ -24,6 +25,7 @@ class AppDriver:
         )
 
         busy_wait().ignore_exceptions().until(self.is_healthy)
+        self.token = self.login("Creeper")["access_token"]
 
     def stop(self):
         self._app_p.terminate()
@@ -33,10 +35,10 @@ class AppDriver:
         return self.app_client.is_healthy(headers)
 
     def create_entry(self, title):
-        return self.app_client.create_entry(title)
+        return self.app_client.create_entry(title, self.token)
 
     def get_entries(self):
-        return self.app_client.get_entries()
+        return self.app_client.get_entries(self.token)
 
     def send_slack_shortcut_message(self, data):
         return self.app_client.send_slack_message_shortcut(data)
