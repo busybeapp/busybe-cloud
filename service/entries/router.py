@@ -24,7 +24,6 @@ async def create_entry(
         entry: Entry,
         access_token: str = Depends(extract_token)
 ):
-    logger.info(f"Received entry data: {entry.model_dump()}")
     token.verify(access_token)
     entry = persistence.add_entry(entry.model_dump())
     return entry.to_json()
