@@ -12,9 +12,10 @@ from ..login import token
 logger = logging.getLogger(__name__)
 router = APIRouter()
 persistence = EntriesStore()
+bearer_scheme = HTTPBearer()
 
 
-def extract_token(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
+def extract_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
     return credentials.credentials
 
 
