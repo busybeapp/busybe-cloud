@@ -18,7 +18,7 @@ class LoginException(Exception):
 
 class Client:
 
-    def __init__(self, token=None):
+    def __init__(self):
         self.port = os.getenv("PORT", 8080)
         self.endpoint = os.getenv("ENDPOINT", 'localhost')
         self.root = f'http://{self.endpoint}:{self.port}'
