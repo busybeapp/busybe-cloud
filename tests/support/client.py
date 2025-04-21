@@ -50,9 +50,11 @@ class Client:
 
     @staticmethod
     def _build_auth_header(token):
-        return {
-            'Authorization': f'Bearer {token}'
-        }
+        headers = {}
+        if token:
+            headers['Authorization'] = f'Bearer {token}'
+
+        return headers
 
     def send_slack_message_shortcut(self, data, invalid_token=False):
         data['token'] = invalid_token if invalid_token else self.slack_token
